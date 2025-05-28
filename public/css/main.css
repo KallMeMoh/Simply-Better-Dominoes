@@ -1,0 +1,78 @@
+:root {
+  --main-color: #333;
+}
+
+.bg-main {
+  color: #fff !important;
+  background-color: var(--main-color) !important;
+}
+
+.text-main {
+  color: var(--main-color) !important;
+}
+
+body {
+  background-color: var(--main-color);
+  color: #fff;
+  font-family: 'Roboto';
+  letter-spacing: 0.1em;
+}
+
+.h,
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-family: 'Orbitron', sans-serif !important;
+}
+
+a {
+  text-decoration: none;
+  color: inherit !important;
+}
+
+img {
+  display: block;
+}
+
+.hero {
+  height: 95vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.7)),
+    url('../images/hero-wallpaper.jpg') center / cover;
+
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+footer {
+  height: 80px;
+}
+
+@media (max-width: 485px) {
+  .h {
+    font-size: 0.75em !important;
+    max-width: 150px !important;
+    text-wrap: wrap;
+  }
+
+  .hero {
+    height: 90vh;
+  }
+  footer {
+    height: 60px;
+  }
+
+  footer p {
+    font-size: 0.75em;
+  }
+}

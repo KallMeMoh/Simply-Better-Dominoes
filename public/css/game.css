@@ -1,0 +1,49 @@
+.playground {
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.7)),
+    url('../images/hero-wallpaper.jpg') center / cover;
+
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+
+.tile {
+  width: 103px;
+  height: 203px;
+  background-image: url('../images/tileset.svg');
+  background-size: 725px 815px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  scale: 0.5;
+  transform-origin: 0 0;
+}
+
+.t01, .t10 { background-position: calc(1 * -103px) calc(0 * -203px); }
+.t02, .t20 { background-position: calc(2 * -103px) calc(0 * -203px); }
+.t03, .t30 { background-position: calc(3 * -103px) calc(0 * -203px); }
+.t04, .t40 { background-position: calc(4 * -103px) calc(0 * -203px); }
+.t05, .t50 { background-position: calc(5 * -103px) calc(0 * -203px); }
+.t06, .t60 { background-position: calc(6 * -103px) calc(0 * -203px); }
+.t11 { background-position: calc(0 * -103px) calc(1 * -203px); }
+.t12, .t21 { background-position: calc(1 * -103px) calc(1 * -203px); }
+.t13, .t31 { background-position: calc(2 * -103px) calc(1 * -203px); }
+.t14, .t41 { background-position: calc(3 * -103px) calc(1 * -203px); }
+.t15, .t51 { background-position: calc(4 * -103px) calc(1 * -203px); }
+.t16, .t61 { background-position: calc(5 * -103px) calc(1 * -203px); }
+.t22 { background-position: calc(6 * -103px) calc(1 * -203px); }
+.t23, .t32 { background-position: calc(0 * -103px) calc(2 * -203px); }
+.t24, .t42 { background-position: calc(1 * -103px) calc(2 * -203px); }
+.t25, .t52 { background-position: calc(2 * -103px) calc(2 * -203px); }
+.t26, .t62 { background-position: calc(3 * -103px) calc(2 * -203px); }
+.t33 { background-position: calc(4 * -103px) calc(2 * -203px); }
+.t34, .t43 { background-position: calc(5 * -103px) calc(2 * -203px); }
+.t35, .t53 { background-position: calc(6 * -103px) calc(2 * -203px); }
+.t36, .t63 { background-position: calc(0 * -103px) calc(3 * -203px); }
+.t44 { background-position: calc(1 * -103px) calc(3 * -203px); }
+.t45, .t54 { background-position: calc(2 * -103px) calc(3 * -203px); }
+.t46, .t64 { background-position: calc(3 * -103px) calc(3 * -203px); }
+.t55 { background-position: calc(4 * -103px) calc(3 * -203px); }
+.t56, .t65 { background-position: calc(5 * -103px) calc(3 * -203px); }
+.t66{ background-position: calc(6 * -103px) calc(3 * -203px); }
