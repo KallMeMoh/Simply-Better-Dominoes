@@ -1,12 +1,16 @@
 const path = require('path');
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const helmet = require('helmet');
-const connectDB = require('./db');
-const { env, port } = require('../config');
+const { connectDB } = require('./db');
+const { env, port } = require('./config.js');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 connectDB();
 
 const isProduction = env === 'production';
@@ -45,8 +49,16 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-const Routes = require('./Routes');
-app.use('/', Routes);
+const routes = require('./routes');
+app.use('/', routes);
+
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
 
 if (isProduction) {
   app.use((err, req, res, next) => {

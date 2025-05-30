@@ -5,5 +5,5 @@ module.exports = {
     secret: process.env['JWT_SECRET'],
     token_expiry: '30d',
   },
-  env: process.env['NODE_ENV'],
+  env: process.env['ENV'],
 };

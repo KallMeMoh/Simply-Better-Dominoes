@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { mongooseURI } = require('../../config');
-const { env } = require('../../config');
+const { mongooseURI } = require('../config.js');
+const { env } = require('../config.js');
 
 /**
  * Connects to the MongoDB database using the provided URI.

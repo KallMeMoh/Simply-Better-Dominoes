@@ -1,4 +1,4 @@
-function generateVariations(text, ...ranges) {
+exports.generateVariations = (text, ...ranges) => {
   let results = [];
 
   let variableRanges = Object.fromEntries(
@@ -31,6 +31,4 @@ function generateVariations(text, ...ranges) {
 
   generateCombination();
   return [...new Set(results)];
-}
-
-module.exports = generateVariations;
+};
