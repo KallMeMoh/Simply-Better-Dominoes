@@ -1,25 +1,22 @@
-const path = require('path');
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const helmet = require('helmet');
+
+const express = require('express');
+const { createServer } = require('node:http');
+const initSocket = require('./socket.js');
+
+const { resolve } = require('node:path');
 const { connectDB } = require('./db');
 const { env, port } = require('./config.js');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-connectDB();
-
 const isProduction = env === 'production';
 
-app.use(
-  express.static(path.resolve(__dirname, '..', 'public'), {
-    fallthrough: false,
-  })
-);
+const app = express();
+const server = createServer(app);
+initSocket(server);
+connectDB();
+
+app.use(express.static(resolve(__dirname, '..', 'public')));
 
 if (isProduction) {
   app.use(helmet());
@@ -34,30 +31,15 @@ if (isProduction) {
 
 app.use(morgan(isProduction ? 'combined' : 'dev'));
 
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: !isProduction,
-  })
-);
-
 const limiter = rateLimit({
-  windowMs: isProduction ? 15 * 60 * 1000 : 60 * 1000, // Rate limit window
-  max: isProduction ? 100 : 1000, // Limit per window
-  standardHeaders: true, // Ensures proper rate limit headers
-  legacyHeaders: false, // Disables old-style headers
+  windowMs: isProduction ? 15 * 60 * 1000 : 60 * 1000,
+  max: isProduction ? 100 : 1000,
+  standardHeaders: true,
+  legacyHeaders: false,
 });
-app.use(limiter);
 
-const routes = require('./routes');
-app.use('/', routes);
-
-io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
+app.get('/', limiter, (req, res) => {
+  res.sendFile(resolve(__dirname, '..', 'views', 'index.html'));
 });
 
 if (isProduction) {
@@ -72,6 +54,6 @@ if (isProduction) {
   });
 }
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
