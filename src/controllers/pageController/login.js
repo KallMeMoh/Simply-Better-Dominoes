@@ -1,7 +1,7 @@
-const { component: header } = require('./components/header.js');
-const { component: footer } = require('./components/footer.js');
+const header = require('./components/header.js');
+const footer = require('./components/footer.js');
 
-exports.page = {
+module.exports = {
   tag: 'main',
   attrs: {},
   children: [
@@ -97,16 +97,16 @@ exports.page = {
                       tag: 'span',
                       attrs: {},
                       children: [
-                        "Don't Have an Account?",
+                        "Don't Have an Account? ",
                         {
                           tag: 'a',
                           attrs: {
                             class: 'link-secondary text-decoration-underline',
-                            href: '/front-end/signup.html',
+                            'data-get-page': 'signup',
                           },
                           children: ['Signup'],
                         },
-                        'Already!',
+                        ' Already!',
                       ],
                     },
                   ],
@@ -116,6 +116,7 @@ exports.page = {
                   attrs: {
                     type: 'submit',
                     class: 'btn btn-secondary m-auto d-block',
+                    'data-do-action': 'login',
                   },
                   children: ["Let's Go"],
                 },

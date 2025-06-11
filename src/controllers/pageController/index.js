@@ -5,7 +5,7 @@ class PageController {
     this.pageAliases = {
       home: 'home',
       login: 'login',
-      signup: 'signup',
+      signup: 'register',
       status: 'status',
       game: 'game',
     };

@@ -10,7 +10,6 @@ const { env } = require('../config.js');
  */
 const connectDB = async () => {
   try {
-    console.log(mongooseURI);
     await mongoose.connect(mongooseURI);
     console.log('MongoDB Connected');
   } catch (err) {
@@ -44,8 +43,7 @@ const pingDB = async () => {
     const end = process.hrtime(start);
     const pingTimeMs = end[0] * 1000 + end[1] / 1e6;
 
-    console.log(`MongoDB Ping Time: ${pingTimeMs.toFixed(3)} ms`);
-    return pingTimeMs;
+    return pingTimeMs.toFixed(2);
   } catch (err) {
     if (env === 'development') {
       console.error(
@@ -59,6 +57,7 @@ const pingDB = async () => {
         `MongoDB Ping Error: An error occurred while pinging the database. [Timestamp: ${new Date().toISOString()}]`
       );
     }
+    return 'N/A';
   }
 };
 

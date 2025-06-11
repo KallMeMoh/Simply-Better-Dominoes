@@ -50,14 +50,16 @@
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0 mt-5 mt-lg-0 gap-3">
                 <li class="nav-item">
                   <button
-                    class="signup nav-link bg-white text-main p-2 rounded-2 border-1"
+                    data-get-page="signup"
+                    class="nav-link bg-white text-main p-2 rounded-2 border-1"
                   >
                     Sign Up
                   </button>
                 </li>
                 <li class="nav-item">
                   <button
-                    class="login nav-link bg-white text-main p-2 rounded-2 border-1"
+                    data-get-page="login"
+                    class="nav-link bg-white text-main p-2 rounded-2 border-1"
                   >
                     Log In
                   </button>
@@ -76,8 +78,10 @@
             <img src="./images/favicon.svg" alt="Logo" width="200px" />
             <h1 style="max-width: 400px">Simply Better Dominoes</h1>
             <div class="btns">
-              <button class="start-session btn btn-dark">Let's Play</button>
-              <button class="login btn btn-dark">Login</button>
+              <button class="btn btn-dark" data-do-action="startSession">
+                Let's Play
+              </button>
+              <button class="btn btn-dark" data-get-page="login">Login</button>
             </div>
           </div>
         </div>

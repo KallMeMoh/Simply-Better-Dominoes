@@ -1,18 +1,10 @@
-const { component: header } = require('./components/header.js');
-const { component: footer } = require('./components/footer.js');
+const header = require('./components/header.js');
+const footer = require('./components/footer.js');
 
-const os = require('os');
-const formatUptime = require('../../helpers/formateUptime.js');
-const { pingDB } = require('../../db/index.js');
-const measureLatency = require('../../helpers/measureLatency.js');
-
-const dbPing = await pingDB();
-const latency = await measureLatency();
-
-exports.page = {
+module.exports = {
   tag: 'main',
   attrs: {},
-  Children: [
+  children: [
     header,
     {
       tag: 'section',
@@ -50,7 +42,21 @@ exports.page = {
                               attrs: {},
                               children: ['🟢 Server Uptime:'],
                             },
-                            `${formatUptime(process.uptime())}`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'uptime',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],
@@ -71,11 +77,21 @@ exports.page = {
                               attrs: {},
                               children: ['💾 Memory Usage:'],
                             },
-                            `${(
-                              process.memoryUsage().rss /
-                              1024 /
-                              1024
-                            ).toFixed(2)} MB`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'memory',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],
@@ -96,14 +112,21 @@ exports.page = {
                               attrs: {},
                               children: ['⚡ CPU Load:'],
                             },
-                            `${
-                              os.platform() === 'win32'
-                                ? 'N/A'
-                                : os
-                                    .loadavg()
-                                    .map((load) => load.toFixed(2))
-                                    .join(',')
-                            }`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'cpu',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],
@@ -124,7 +147,21 @@ exports.page = {
                               attrs: {},
                               children: ['🔗 Active Requests:'],
                             },
-                            `${global.activeRequests || 0}`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'requests',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],
@@ -145,7 +182,21 @@ exports.page = {
                               attrs: {},
                               children: ['🛢️ Database Connectivity:'],
                             },
-                            `${dbPing}`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'db',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],
@@ -166,7 +217,21 @@ exports.page = {
                               attrs: {},
                               children: ['📈 Latency:'],
                             },
-                            `${latency} ms`,
+                            {
+                              tag: 'span',
+                              attrs: {
+                                class: 'latency',
+                              },
+                              children: [
+                                {
+                                  tag: 'i',
+                                  attrs: {
+                                    class: 'fa-solid fa-spinner fa-spin',
+                                  },
+                                  children: [],
+                                },
+                              ],
+                            },
                           ],
                         },
                       ],

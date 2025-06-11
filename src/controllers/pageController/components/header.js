@@ -1,4 +1,4 @@
-exports.component = {
+module.exports = {
   tag: 'header',
   attrs: {},
   children: [
@@ -14,7 +14,7 @@ exports.component = {
               tag: 'a',
               attrs: {
                 class: 'navbar-brand d-flex align-items-center gap-2',
-                href: '/',
+                'data-get-page': 'home',
               },
               children: [
                 {
@@ -23,12 +23,13 @@ exports.component = {
                     src: './images/favicon.svg',
                     alt: 'Logo',
                     width: '35px',
+                    'data-get-page': 'home',
                   },
                   children: [],
                 },
                 {
                   tag: 'span',
-                  attrs: { class: 'h mb-0' },
+                  attrs: { class: 'h mb-0', 'data-get-page': 'home' },
                   children: ['Simply Better Dominoes'],
                 },
               ],
@@ -73,7 +74,8 @@ exports.component = {
                           tag: 'button',
                           attrs: {
                             class:
-                              'signup nav-link bg-white text-main p-2 rounded-2 border-1',
+                              'nav-link bg-white text-main p-2 rounded-2 border-1',
+                            'data-get-page': 'signup',
                           },
                           children: ['Sign Up'],
                         },
@@ -87,7 +89,8 @@ exports.component = {
                           tag: 'button',
                           attrs: {
                             class:
-                              'login nav-link bg-white text-main p-2 rounded-2 border-1',
+                              'nav-link bg-white text-main p-2 rounded-2 border-1',
+                            'data-get-page': 'login',
                           },
                           children: ['Log In'],
                         },

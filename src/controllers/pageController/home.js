@@ -1,9 +1,9 @@
-const { component: header } = require('./components/header.js');
-const { component: footer } = require('./components/footer.js');
+const header = require('./components/header.js');
+const footer = require('./components/footer.js');
 
-exports.page = {
+module.exports = {
   tag: 'main',
-  attrs: { id: 'main' },
+  attrs: {},
   children: [
     header,
     {
@@ -41,12 +41,19 @@ exports.page = {
                   children: [
                     {
                       tag: 'button',
-                      attrs: { class: 'start-session btn btn-dark' },
+                      attrs: {
+                        class: 'btn btn-dark',
+                        'data-do-action': 'startSession',
+                      },
                       children: ["Let's Play"],
                     },
+                    ' ',
                     {
                       tag: 'button',
-                      attrs: { class: 'login btn btn-dark' },
+                      attrs: {
+                        class: 'btn btn-dark',
+                        'data-get-page': 'login',
+                      },
                       children: ['Login'],
                     },
                   ],

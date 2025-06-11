@@ -1,4 +1,4 @@
-exports.formatUptime = (inputSeconds) => {
+module.exports = (inputSeconds) => {
   if (typeof inputSeconds !== 'number' || inputSeconds < 0) {
     throw new Error('Input must be a non-negative number');
   }

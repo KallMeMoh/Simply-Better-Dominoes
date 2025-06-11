@@ -1,4 +1,4 @@
-exports.component = {
+module.exports = {
   tag: 'footer',
   attrs: {
     class: 'd-flex justify-content-center align-items-center p-3',
@@ -9,7 +9,7 @@ exports.component = {
       tag: 'p',
       attrs: { class: 'mb-0' },
       children: [
-        'All rights reserved © 2025',
+        'All rights reserved © 2025 ',
         {
           tag: 'span',
           attrs: { class: 'text-decoration-underline' },
