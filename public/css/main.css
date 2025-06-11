@@ -75,3 +75,16 @@ footer {
   display: flex;
   justify-content: space-between;
 }
+
+.timestamp {
+  position: relative;
+  top: -1em;
+  left: 0;
+  align-self: flex-end;
+  font-size: 0.75em;
+  color: #333;
+}
+
+h1 {
+  margin-bottom: 0 !important;
+}

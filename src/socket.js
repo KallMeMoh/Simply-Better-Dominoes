@@ -5,7 +5,6 @@ const pageController = new PageController();
 const os = require('os');
 const formatUptime = require('./helpers/formateUptime.js');
 const { pingDB } = require('./db');
-const measureLatency = require('./helpers/measureLatency.js');
 
 function initSocket(server) {
   let statusUpdateInterval = null;
@@ -15,11 +14,11 @@ function initSocket(server) {
     console.log('A user connected:', socket.id);
 
     socket.lastRequestedPage = '';
-    socket.on('pageRequest', async (pageName, callback) => {
-      if (socket.lastRequestedPage === pageName) callback({});
+    socket.on('pageRequest', async (pageName, ack) => {
+      if (socket.lastRequestedPage === pageName) ack({});
       try {
         const pageObj = pageController.getPage(pageName);
-        callback(pageObj);
+        ack(pageObj);
         socket.lastRequestedPage = pageName;
 
         if (pageName === 'status') {
@@ -28,8 +27,8 @@ function initSocket(server) {
             statusUpdateInterval = setInterval(async () => {
               if (io.sockets.adapter.rooms.get('serverStatus')?.size > 0) {
                 const updatedStatus = {
+                  sentAt: Date.now(),
                   databasePing: `${await pingDB()} ms`,
-                  latency: `${await measureLatency()} ms`,
                   CPULoad:
                     os.platform() === 'win32'
                       ? 'N/A'
@@ -55,10 +54,12 @@ function initSocket(server) {
           socket.leave('serverStatus');
         }
       } catch (e) {
-        callback({});
+        ack({});
         console.error(e);
       }
     });
+
+    socket.on('ping', (clientT0, ack) => ack(clientT0));
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);

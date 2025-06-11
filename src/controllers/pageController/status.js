@@ -18,7 +18,7 @@ module.exports = {
               tag: 'div',
               attrs: {
                 class:
-                  'd-flex flex-column justify-content-center align-items-center h-100 text-center gap-5',
+                  'd-flex flex-column justify-content-center align-items-center h-100 text-center gap-md-5 gap-4 mt-3',
               },
               children: [
                 { tag: 'h1', attrs: {}, children: ['Server Status'] },
@@ -233,6 +233,28 @@ module.exports = {
                               ],
                             },
                           ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  tag: 'div',
+                  attrs: {
+                    class: 'timestamp',
+                  },
+                  children: [
+                    'Last updated at ',
+                    {
+                      tag: 'span',
+                      attrs: {},
+                      children: [
+                        {
+                          tag: 'i',
+                          attrs: {
+                            class: 'fa-solid fa-spinner fa-spin',
+                          },
+                          children: [],
                         },
                       ],
                     },

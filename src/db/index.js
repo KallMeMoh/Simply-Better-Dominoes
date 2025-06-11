@@ -43,7 +43,7 @@ const pingDB = async () => {
     const end = process.hrtime(start);
     const pingTimeMs = end[0] * 1000 + end[1] / 1e6;
 
-    return pingTimeMs.toFixed(2);
+    return pingTimeMs.toFixed(0);
   } catch (err) {
     if (env === 'development') {
       console.error(
