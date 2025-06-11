@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
   port: process.env['PORT'] || 4001,
   mongooseURI: process.env['MONGO_URI'],

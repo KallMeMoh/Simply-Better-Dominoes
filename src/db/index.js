@@ -10,6 +10,7 @@ const { env } = require('../config.js');
  */
 const connectDB = async () => {
   try {
+    console.log(mongooseURI);
     await mongoose.connect(mongooseURI);
     console.log('MongoDB Connected');
   } catch (err) {
