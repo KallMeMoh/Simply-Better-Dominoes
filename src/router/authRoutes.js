@@ -10,19 +10,25 @@ router.post(
     body('username')
       .exists()
       .withMessage('Username is required')
-      .isLength({ min: 3 })
-      .withMessage('Username must be at least 5 characters long'),
+      .isLength({ min: 3, max: 20 })
+      .withMessage('Username must be at least 3 characters long')
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage(
+        'Username can only contain letters, numbers, and _ (underscores)'
+      ),
     body('email')
-      .exists()
+      .notEmpty()
       .withMessage('Email is required')
       .isEmail()
       .withMessage('Invalid email format'),
     body('password')
       .exists()
       .withMessage('Password is required')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\w\s])).{8,}$/)
+      .isLength({ min: 8, max: 20 })
+      .withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
   authController.POST_Signup
@@ -35,10 +41,14 @@ router.post(
       body('username')
         .exists()
         .withMessage('Username is required')
-        .isLength({ min: 5 })
-        .withMessage('Username must be at least 5 characters long'),
+        .isLength({ min: 3, max: 20 })
+        .withMessage('Username must be at least 3 characters long')
+        .matches(/^[a-zA-Z0-9_]+$/)
+        .withMessage(
+          'Username can only contain letters, numbers, and _ (underscores)'
+        ),
       body('email')
-        .exists()
+        .notEmpty()
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Invalid email format'),
@@ -46,9 +56,11 @@ router.post(
     body('password')
       .exists()
       .withMessage('Password is required')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+      .isLength({ min: 8, max: 20 })
+      .withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and be at least 8 characters long'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
   authController.POST_Login
