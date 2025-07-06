@@ -1,7 +1,136 @@
+'use strict';
 const socket = io();
 
 function startSession() {
   console.log('starting session');
+}
+
+function dismissAlert(alertBox, timeoutId = 0) {
+  clearTimeout(timeoutId);
+  alertBox.classList.add('disappear');
+
+  setTimeout(() => alertBox.remove(), 380);
+}
+
+const messageStack = document.querySelector('.messageStack');
+function createPopupMessage(text, type = 'primary', callback = () => {}) {
+  const dismissTime = (text.length * 0.3) % 60;
+  let dismiss = setTimeout(() => {
+    dismissAlert(alertBox);
+    callback();
+  }, dismissTime * 1000);
+
+  const alertBox = document.createElement('div');
+  const alertBody = document.createElement('div');
+  const alertMessage = document.createElement('div');
+  const msgIcon = document.createElement('i');
+  msgIcon.classList.add('fa-lg');
+  if (type == 'dark' || type == 'light') {
+    msgIcon.classList.add('fa-solid', 'fa-bell');
+  } else if (type == 'info') {
+    msgIcon.classList.add('fa-solid', 'fa-exclamation');
+  } else if (type == 'warning') {
+    msgIcon.classList.add('fa-solid', 'fa-triangle-exclamation');
+  } else if (type == 'danger') {
+    msgIcon.classList.add('fa-solid', 'fa-explosion');
+  } else {
+    // primay / secondary / success
+    msgIcon.classList.add('fa-solid', 'fa-circle-check');
+  }
+
+  const msgText = document.createElement('div');
+  msgText.classList.add('small');
+  msgText.innerText = text;
+
+  alertMessage.classList.add('d-flex', 'align-items-center', 'gap-3');
+  alertMessage.append(msgIcon, msgText);
+
+  const alertDismiss = document.createElement('i');
+  alertDismiss.ariaLabel = 'close';
+  alertDismiss.classList.add('fa-solid', 'fa-xmark', 'fa-lg');
+  alertDismiss.onclick = () => dismissAlert(alertBox, dismiss);
+
+  alertBody.classList.add(
+    'd-flex',
+    'align-items-center',
+    'justify-content-between',
+    'gap-3',
+    'px-3',
+    'py-2'
+  );
+  alertBody.append(alertMessage, alertDismiss);
+
+  const alertCountDown = document.createElement('div');
+  const alertProgress = document.createElement('div');
+  alertProgress.style.setProperty(
+    'animation',
+    `collapse ${dismissTime}s linear`
+  );
+  alertProgress.classList.add('progress-bar', `bg-${type}`);
+  alertCountDown.role = 'progressbar';
+  alertCountDown.ariaValueNow = text.length;
+  alertCountDown.ariaValueMin = '0';
+  alertCountDown.ariaValueMax = text.length;
+  alertCountDown.classList.add(
+    'progress',
+    'bg-transparent',
+    'flex-row-reverse',
+    'rounded-0',
+    'rounded-bottom'
+  );
+  alertCountDown.append(alertProgress);
+
+  alertBox.role = 'alert';
+  alertBox.classList.add(
+    'appear',
+    `text-${type}-emphasis`,
+    `bg-${type}-subtle`,
+    'rounded',
+    'mb-3'
+  );
+  alertBox.append(alertBody, alertCountDown);
+
+  messageStack.append(alertBox);
+}
+
+async function signup(e) {
+  const [usernameInput, emailInput, passwordInput] = [
+    document.getElementById('usernameInput'),
+    document.getElementById('emailInput'),
+    document.getElementById('passwordInput'),
+  ];
+
+  if (usernameInput && emailInput && passwordInput) {
+    const formData = {
+      username: usernameInput.value,
+      email: emailInput.value,
+      password: passwordInput.value,
+    };
+    console.log(formData);
+
+    const resonse = await fetch('/auth/signup', {
+      method: 'POST',
+      mode: 'same-origin',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await resonse.json();
+
+    console.log(data);
+
+    if (data.OK) {
+      createPopupMessage('Account Created successfully', 'success');
+      createPopupMessage('Redirecting you to login...', 'info', () => {
+        socket.emit('pageRequest', 'login', render);
+      });
+    } else {
+      data.errors.forEach((err) => createPopupMessage(err.msg, 'danger'));
+    }
+  }
 }
 
 function login() {

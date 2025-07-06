@@ -1,4 +1,3 @@
-const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const helmet = require('helmet');
 
@@ -31,16 +30,10 @@ if (isProduction) {
 
 app.use(morgan(isProduction ? 'combined' : 'dev'));
 
-const limiter = rateLimit({
-  windowMs: isProduction ? 15 * 60 * 1000 : 60 * 1000,
-  max: isProduction ? 100 : 1000,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+app.use(express.json());
 
-app.get('/', limiter, (req, res) => {
-  res.sendFile(resolve(__dirname, '..', 'views', 'index.html'));
-});
+const routes = require('./router');
+app.use('/', routes);
 
 if (isProduction) {
   app.use((err, req, res, next) => {

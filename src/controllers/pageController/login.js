@@ -42,11 +42,11 @@ module.exports = {
                     {
                       tag: 'input',
                       attrs: {
-                        type: 'email',
+                        type: 'text',
                         class: 'form-control',
-                        id: 'emailInput',
-                        placeholder: 'name@example.com',
-                        'aria-describedby': 'emailHelp',
+                        id: 'userInput',
+                        placeholder: 'Username | name@example.com',
+                        'aria-describedby': 'userHelp',
                       },
                       children: [],
                     },
