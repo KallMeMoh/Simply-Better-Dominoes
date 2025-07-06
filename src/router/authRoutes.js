@@ -83,18 +83,30 @@ router.post(
     body('curr_password')
       .exists()
       .withMessage('Old Password is required')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
-      .withMessage('Invalid password format.'),
+      .isLength({ min: 8, max: 20 })
+      .withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .withMessage(
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+      ),
     body('new_password')
       .exists()
       .withMessage('New Password is required')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
-      .withMessage('Invalid password format.'),
+      .isLength({ min: 8, max: 20 })
+      .withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .withMessage(
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+      ),
     body('re_password')
       .exists()
       .withMessage('Repeat New Password is required')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
-      .withMessage('Invalid password format.'),
+      .isLength({ min: 8, max: 20 })
+      .withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .withMessage(
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+      ),
   ],
   authController.POST_ChangePassword
 );
