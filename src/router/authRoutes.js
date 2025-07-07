@@ -26,7 +26,7 @@ router.post(
       .withMessage('Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
@@ -58,7 +58,7 @@ router.post(
       .withMessage('Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
@@ -85,7 +85,7 @@ router.post(
       .withMessage('Old Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
@@ -94,7 +94,7 @@ router.post(
       .withMessage('New Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
@@ -103,7 +103,7 @@ router.post(
       .withMessage('Repeat New Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
-      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+      .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),

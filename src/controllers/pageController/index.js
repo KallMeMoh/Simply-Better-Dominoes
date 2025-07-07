@@ -7,6 +7,7 @@ class PageController {
       login: 'login',
       signup: 'register',
       status: 'status',
+      rooms: 'rooms',
       game: 'game',
     };
   }

@@ -1,29 +1,27 @@
 const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
-// const jwt = require('jsonwebtoken');
-// const config = require('../config.js');
+const jwt = require('jsonwebtoken');
+const config = require('../config.js');
 
 const User = require('../db/models/User.js');
-// const Session = require('../db/models/Session.js');
+const Session = require('../db/models/Session.js');
 // const Guest = require('../db/models/Guest.js');
 
 exports.POST_Signup = async (req, res) => {
   try {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
-    }
 
     const { username, email, password } = req.body;
 
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });
-    if (existingUser) {
+    if (existingUser)
       return res.status(409).json({
         errors: [{ msg: 'Username or Email already exists' }],
       });
-    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -49,37 +47,64 @@ exports.POST_Signup = async (req, res) => {
 };
 
 exports.POST_Login = async (req, res) => {
-  //   try {
-  //     const errors = validationResult(req);
-  //     if (!errors.isEmpty()) {
-  //       return res.status(400).json({ errors: errors.array() });
-  //     }
-  //     const { username, password } = req.body;
-  //     const user = await User.findOne({ username });
-  //     if (!user) {
-  //       return res.status(401).json({ message: 'User does not exist' });
-  //     }
-  //     const isMatch = await bcrypt.compare(password, user.password);
-  //     if (!isMatch) {
-  //       return res.status(401).json({ message: 'Invalid username or password' });
-  //     }
-  //     const accessToken = generateAccessToken(user._id);
-  //     const refreshToken = generateRefreshToken(user._id);
-  //     const tokenDoc = new Token({
-  //       userId: user._id,
-  //       accessToken,
-  //       refreshToken,
-  //     });
-  //     await tokenDoc.save();
-  //     res.status(200).json({ accessToken, refreshToken });
-  //   } catch (err) {
-  //     console.error(err);
-  //     if (err.name === 'ValidationError') {
-  //       res.status(400).json({ message: err.message });
-  //     } else {
-  //       res.status(500).json({ message: 'Internal server error' });
-  //     }
-  //   }
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+
+    const { username, email, password } = req.body;
+
+    let user;
+    if (email) user = await User.findOne({ email });
+    else user = await User.findOne({ username });
+
+    if (!user)
+      return res.status(401).json({
+        errors: [{ msg: 'User does not exist' }],
+      });
+
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+    if (!isMatch)
+      return res.status(401).json({
+        errors: [{ msg: 'Invalid credintials' }],
+      });
+
+    const session = new Session({
+      user_id: user._id,
+      device: req.headers['user-agent'],
+      ip_address: req.ip,
+    });
+    await session.save();
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        sessionId: session._id,
+        tokenVersion: user.token_version,
+      },
+      config.jwt.secret,
+      {
+        expiresIn: config.jwt.token_expiry,
+      }
+    );
+
+    res.cookie('token', token, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: config.env === 'production',
+    });
+
+    res.status(200).json({ OK: 1 });
+  } catch (err) {
+    console.error(err);
+    if (err.name === 'ValidationError') {
+      res.status(400).json({
+        errors: [{ msg: err.message }],
+      });
+    } else {
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 };
 
 exports.POST_Logout = async (req, res) => {

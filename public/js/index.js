@@ -106,9 +106,48 @@ async function signup(e) {
       email: emailInput.value,
       password: passwordInput.value,
     };
-    console.log(formData);
 
     const resonse = await fetch('/auth/signup', {
+      method: 'POST',
+      mode: 'same-origin',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await resonse.json();
+
+    if (data.OK) {
+      createPopupMessage('Account Created successfully', 'success');
+      createPopupMessage('Redirecting you to login...', 'info', () => {
+        socket.emit('pageRequest', 'login', render);
+      });
+    } else {
+      data.errors.forEach((err) => createPopupMessage(err.msg, 'danger'));
+    }
+  }
+}
+
+async function login() {
+  const [userInput, passwordInput] = [
+    document.getElementById('userInput'),
+    document.getElementById('passwordInput'),
+  ];
+
+  if (userInput && passwordInput) {
+    const formData = {
+      password: passwordInput.value,
+    };
+    if (/@/g.test(userInput.value)) {
+      formData['email'] = userInput.value;
+    } else {
+      formData['username'] = userInput.value;
+    }
+    console.log(formData);
+
+    const resonse = await fetch('/auth/login', {
       method: 'POST',
       mode: 'same-origin',
       cache: 'no-cache',
@@ -123,18 +162,13 @@ async function signup(e) {
     console.log(data);
 
     if (data.OK) {
-      createPopupMessage('Account Created successfully', 'success');
-      createPopupMessage('Redirecting you to login...', 'info', () => {
-        socket.emit('pageRequest', 'login', render);
-      });
+      socket.disconnect();
+      socket.connect();
+      socket.emit('pageRequest', 'rooms', render);
     } else {
       data.errors.forEach((err) => createPopupMessage(err.msg, 'danger'));
     }
   }
-}
-
-function login() {
-  console.log('attembting login');
 }
 
 function render(pageObj) {

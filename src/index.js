@@ -1,5 +1,6 @@
 const morgan = require('morgan');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 
 const express = require('express');
 const { createServer } = require('node:http');
@@ -31,6 +32,7 @@ if (isProduction) {
 app.use(morgan(isProduction ? 'combined' : 'dev'));
 
 app.use(express.json());
+app.use(cookieParser());
 
 const routes = require('./router');
 app.use('/', routes);

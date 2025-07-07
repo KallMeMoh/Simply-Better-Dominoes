@@ -52,13 +52,13 @@ module.exports = {
                     },
                     {
                       tag: 'label',
-                      attrs: { for: 'emailInput', class: 'form-label' },
-                      children: ['Email address'],
+                      attrs: { for: 'userInput', class: 'form-label' },
+                      children: ['Username | name@example.com'],
                     },
                     {
                       tag: 'div',
                       attrs: {
-                        id: 'emailHelp',
+                        id: 'userHelp',
                         class: 'form-text text-white-50',
                         style: 'font-size: 0.5em',
                       },
