@@ -5,6 +5,21 @@ function startSession() {
   console.log('starting session');
 }
 
+function logout() {
+  fetch('/auth/logout', {
+    method: 'POST',
+    mode: 'same-origin',
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err));
+}
+
 function dismissAlert(alertBox, timeoutId = 0) {
   clearTimeout(timeoutId);
   alertBox.classList.add('disappear');
@@ -157,45 +172,45 @@ async function login() {
       formData['username'] = userInput.value || '';
     }
 
-    // try {
-    const resonse = await fetch('/auth/login', {
-      method: 'POST',
-      mode: 'same-origin',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const resonse = await fetch('/auth/login', {
+        method: 'POST',
+        mode: 'same-origin',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await resonse.json();
+      const data = await resonse.json();
 
-    if (data.OK) {
-      socket.disconnect();
-      socket.connect();
-      socket.emit('pageRequest', 'rooms', render);
-    } else {
-      console.log(data);
-      let errors = {};
-      data.errors.forEach((err) => {
-        if (err.type === 'field') {
-          if (!errors[err.path]) {
-            errors[err.path] = true;
+      if (data.OK) {
+        socket.disconnect();
+        socket.connect();
+        socket.emit('pageRequest', 'rooms', render);
+      } else {
+        console.log(data);
+        let errors = {};
+        data.errors.forEach((err) => {
+          if (err.type === 'field') {
+            if (!errors[err.path]) {
+              errors[err.path] = true;
+              createPopupMessage(err.msg, 'danger');
+            }
+          } else if (err.type === 'alternative_grouped') {
+            createPopupMessage(
+              'Please enter a valid username or email!',
+              'danger'
+            );
+          } else {
             createPopupMessage(err.msg, 'danger');
           }
-        } else if (err.type === 'alternative_grouped') {
-          createPopupMessage(
-            'Please enter a valid username or email!',
-            'danger'
-          );
-        } else {
-          createPopupMessage(err.msg, 'danger');
-        }
-      });
+        });
+      }
+    } catch (e) {
+      console.log(e.message);
     }
-    // } catch (e) {
-    //   console.error(e.message);
-    // }
   }
 }
 

@@ -5,7 +5,6 @@ const rateLimit = require('express-rate-limit');
 const { join } = require('node:path');
 const authRoutes = require('./authRoutes.js');
 const { env } = require('../config.js');
-const { JsonWebTokenError } = require('jsonwebtoken');
 
 router.use('/auth', authRoutes);
 

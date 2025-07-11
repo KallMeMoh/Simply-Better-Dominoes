@@ -9,6 +9,11 @@ const Session = require('../db/models/Session.js');
 
 exports.POST_Signup = async (req, res) => {
   try {
+    const payload = req.cookies['token'];
+    if (payload)
+      return res
+        .status(409)
+        .json({ errors: [{ msg: 'Already authanticated session exists' }] });
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
@@ -48,6 +53,11 @@ exports.POST_Signup = async (req, res) => {
 
 exports.POST_Login = async (req, res) => {
   try {
+    const payload = req.cookies['token'];
+    if (payload)
+      return res
+        .status(409)
+        .json({ errors: [{ msg: 'Already authanticated session exists' }] });
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(400).json({ errors: errors.array() });
@@ -108,6 +118,8 @@ exports.POST_Login = async (req, res) => {
 };
 
 exports.POST_Logout = async (req, res) => {
+  res.clearCookie('token');
+  res.status(200).send({ OK: 1 });
   //   const logoutAll = req.body.logout_all ?? false;
   //   /////////////
   //   const authHeader = req.headers.authorization;
