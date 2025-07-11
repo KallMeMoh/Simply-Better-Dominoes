@@ -8,7 +8,7 @@ router.post(
   '/signup',
   [
     body('username')
-      .exists()
+      .notEmpty()
       .withMessage('Username is required')
       .isLength({ min: 3, max: 20 })
       .withMessage('Username must be at least 3 characters long')
@@ -22,7 +22,7 @@ router.post(
       .isEmail()
       .withMessage('Invalid email format'),
     body('password')
-      .exists()
+      .notEmpty()
       .withMessage('Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
@@ -39,7 +39,7 @@ router.post(
   [
     oneOf([
       body('username')
-        .exists()
+        .notEmpty()
         .withMessage('Username is required')
         .isLength({ min: 3, max: 20 })
         .withMessage('Username must be at least 3 characters long')
@@ -54,7 +54,7 @@ router.post(
         .withMessage('Invalid email format'),
     ]),
     body('password')
-      .exists()
+      .notEmpty()
       .withMessage('Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
@@ -81,7 +81,7 @@ router.post(
   '/change-password',
   [
     body('curr_password')
-      .exists()
+      .notEmpty()
       .withMessage('Old Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
@@ -90,7 +90,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
     body('new_password')
-      .exists()
+      .notEmpty()
       .withMessage('New Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')
@@ -99,7 +99,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
     body('re_password')
-      .exists()
+      .notEmpty()
       .withMessage('Repeat New Password is required')
       .isLength({ min: 8, max: 20 })
       .withMessage('Password must be at least 8 characters long')

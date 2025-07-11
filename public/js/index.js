@@ -25,13 +25,13 @@ function createPopupMessage(text, type = 'primary', callback = () => {}) {
   const alertMessage = document.createElement('div');
   const msgIcon = document.createElement('i');
   msgIcon.classList.add('fa-lg');
-  if (type == 'dark' || type == 'light') {
+  if (type === 'dark' || type === 'light') {
     msgIcon.classList.add('fa-solid', 'fa-bell');
-  } else if (type == 'info') {
+  } else if (type === 'info') {
     msgIcon.classList.add('fa-solid', 'fa-exclamation');
-  } else if (type == 'warning') {
+  } else if (type === 'warning') {
     msgIcon.classList.add('fa-solid', 'fa-triangle-exclamation');
-  } else if (type == 'danger') {
+  } else if (type === 'danger') {
     msgIcon.classList.add('fa-solid', 'fa-explosion');
   } else {
     // primay / secondary / success
@@ -93,7 +93,7 @@ function createPopupMessage(text, type = 'primary', callback = () => {}) {
   messageStack.append(alertBox);
 }
 
-async function signup(e) {
+async function signup() {
   const [usernameInput, emailInput, passwordInput] = [
     document.getElementById('usernameInput'),
     document.getElementById('emailInput'),
@@ -102,30 +102,41 @@ async function signup(e) {
 
   if (usernameInput && emailInput && passwordInput) {
     const formData = {
-      username: usernameInput.value,
-      email: emailInput.value,
-      password: passwordInput.value,
+      username: usernameInput.value || '',
+      email: emailInput.value || '',
+      password: passwordInput.value || '',
     };
 
-    const resonse = await fetch('/auth/signup', {
-      method: 'POST',
-      mode: 'same-origin',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await resonse.json();
-
-    if (data.OK) {
-      createPopupMessage('Account Created successfully', 'success');
-      createPopupMessage('Redirecting you to login...', 'info', () => {
-        socket.emit('pageRequest', 'login', render);
+    try {
+      const resonse = await fetch('/auth/signup', {
+        method: 'POST',
+        mode: 'same-origin',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-    } else {
-      data.errors.forEach((err) => createPopupMessage(err.msg, 'danger'));
+
+      const data = await resonse.json();
+
+      if (data.OK) {
+        createPopupMessage('Account Created successfully', 'success');
+        createPopupMessage('Redirecting you to login...', 'info', () => {
+          socket.emit('pageRequest', 'login', render);
+        });
+      } else {
+        let errors = {};
+
+        data.errors.forEach((err) => {
+          if (!errors[err.path]) {
+            createPopupMessage(err.msg, 'danger');
+            errors[err.path] = true;
+          }
+        });
+      }
+    } catch (e) {
+      console.error(e.message);
     }
   }
 }
@@ -141,12 +152,12 @@ async function login() {
       password: passwordInput.value,
     };
     if (/@/g.test(userInput.value)) {
-      formData['email'] = userInput.value;
+      formData['email'] = userInput.value || '';
     } else {
-      formData['username'] = userInput.value;
+      formData['username'] = userInput.value || '';
     }
-    console.log(formData);
 
+    // try {
     const resonse = await fetch('/auth/login', {
       method: 'POST',
       mode: 'same-origin',
@@ -159,15 +170,32 @@ async function login() {
 
     const data = await resonse.json();
 
-    console.log(data);
-
     if (data.OK) {
       socket.disconnect();
       socket.connect();
       socket.emit('pageRequest', 'rooms', render);
     } else {
-      data.errors.forEach((err) => createPopupMessage(err.msg, 'danger'));
+      console.log(data);
+      let errors = {};
+      data.errors.forEach((err) => {
+        if (err.type === 'field') {
+          if (!errors[err.path]) {
+            errors[err.path] = true;
+            createPopupMessage(err.msg, 'danger');
+          }
+        } else if (err.type === 'alternative_grouped') {
+          createPopupMessage(
+            'Please enter a valid username or email!',
+            'danger'
+          );
+        } else {
+          createPopupMessage(err.msg, 'danger');
+        }
+      });
     }
+    // } catch (e) {
+    //   console.error(e.message);
+    // }
   }
 }
 
