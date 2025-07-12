@@ -11,12 +11,13 @@ exports.POST_Signup = async (req, res) => {
   try {
     const payload = req.cookies['token'];
     if (payload)
-      return res
-        .status(409)
-        .json({ errors: [{ msg: 'Already authanticated session exists' }] });
+      return res.json({
+        status: 409,
+        errors: [{ msg: 'Already authanticated session exists' }],
+      });
     const errors = validationResult(req);
     if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+      return res.json({ status: 400, errors: errors.array() });
 
     const { username, email, password } = req.body;
 
@@ -24,8 +25,8 @@ exports.POST_Signup = async (req, res) => {
       $or: [{ username }, { email }],
     });
     if (existingUser)
-      return res.status(409).json({
-        errors: [{ msg: 'Username or Email already exists' }],
+      return res.json({
+        errors: [{ status: 409, msg: 'Username or Email already exists' }],
       });
 
     const salt = await bcrypt.genSalt(10);
@@ -38,15 +39,15 @@ exports.POST_Signup = async (req, res) => {
     });
     await user.save();
 
-    res.status(200).json({ OK: 1 });
+    res.json({ OK: 1 });
   } catch (err) {
     console.error(err);
     if (err.message === 'Invalid username or password') {
-      res.status(401).json({ message: err.message });
+      res.json({ status: 401, message: err.message });
     } else if (err.name === 'ValidationError') {
-      res.status(400).json({ message: err.message });
+      res.json({ status: 400, message: err.message });
     } else {
-      res.status(500).json({ message: 'Internal server error' });
+      res.json({ status: 500, message: 'Internal server error' });
     }
   }
 };
@@ -55,12 +56,12 @@ exports.POST_Login = async (req, res) => {
   try {
     const payload = req.cookies['token'];
     if (payload)
-      return res
-        .status(409)
-        .json({ errors: [{ msg: 'Already authanticated session exists' }] });
+      return res.json({
+        status: 409,
+        errors: [{ msg: 'Already authanticated session exists' }],
+      });
     const errors = validationResult(req);
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.json({ errors: errors.array() });
 
     const { username, email, password } = req.body;
 
@@ -69,13 +70,15 @@ exports.POST_Login = async (req, res) => {
     else user = await User.findOne({ username });
 
     if (!user)
-      return res.status(401).json({
+      return res.json({
+        status: 401,
         errors: [{ msg: 'User does not exist' }],
       });
 
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch)
-      return res.status(401).json({
+      return res.json({
+        status: 401,
         errors: [{ msg: 'Invalid credintials' }],
       });
 
@@ -104,22 +107,23 @@ exports.POST_Login = async (req, res) => {
       secure: config.env === 'production',
     });
 
-    res.status(200).json({ OK: 1 });
+    res.json({ OK: 1 });
   } catch (err) {
     console.error(err);
     if (err.name === 'ValidationError') {
-      res.status(400).json({
+      res.json({
+        status: 400,
         errors: [{ msg: err.message }],
       });
     } else {
-      res.status(500).json({ message: 'Internal server error' });
+      res.json({ status: 500, message: 'Internal server error' });
     }
   }
 };
 
 exports.POST_Logout = async (req, res) => {
   res.clearCookie('token');
-  res.status(200).send({ OK: 1 });
+  res.send({ OK: 1 });
   //   const logoutAll = req.body.logout_all ?? false;
   //   /////////////
   //   const authHeader = req.headers.authorization;

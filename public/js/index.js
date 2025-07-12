@@ -190,7 +190,6 @@ async function login() {
         socket.connect();
         socket.emit('pageRequest', 'rooms', render);
       } else {
-        console.log(data);
         let errors = {};
         data.errors.forEach((err) => {
           if (err.type === 'field') {
