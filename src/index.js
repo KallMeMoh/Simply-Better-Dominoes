@@ -1,6 +1,7 @@
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import { resolve } from 'node:path';
 
 import express from 'express';
 import { createServer } from 'node:http';
@@ -15,7 +16,7 @@ const server = createServer(app);
 io(server);
 connectDB();
 
-app.use(express.static('../public'));
+app.use(express.static(resolve('public')));
 
 if (isProduction) {
   app.use(helmet());

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
+import { resolve } from 'node:path';
 
 import authRoutes from './authRoutes.js';
 import { env } from '../config.js';
@@ -15,8 +16,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-router.get('/', limiter, (req, res) => {
-  res.sendFile('../../views/index.html');
+router.get('/', limiter, (_, res) => {
+  res.sendFile(resolve('views', 'index.html'));
 });
 
 // temp code -> shall be a socket io middleware
