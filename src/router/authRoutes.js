@@ -1,8 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const { body, oneOf } = require('express-validator');
+import { Router } from 'express';
+import { body, oneOf } from 'express-validator';
+import {
+  POST_Signup,
+  POST_Login,
+  POST_Logout,
+  POST_ChangePassword,
+} from '../controllers/authController.js';
 
-const authController = require('../controllers/authController.js');
+const router = Router();
 
 router.post(
   '/signup',
@@ -31,7 +36,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  authController.POST_Signup
+  POST_Signup
 );
 
 router.post(
@@ -63,7 +68,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  authController.POST_Login
+  POST_Login
 );
 
 router.post(
@@ -74,7 +79,7 @@ router.post(
       .isBoolean()
       .withMessage('Logout all must be a boolean value'),
   ],
-  authController.POST_Logout
+  POST_Logout
 );
 
 router.post(
@@ -108,7 +113,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  authController.POST_ChangePassword
+  POST_ChangePassword
 );
 
-module.exports = router;
+export default router;

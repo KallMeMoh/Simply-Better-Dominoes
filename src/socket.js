@@ -1,12 +1,11 @@
-const { Server } = require('socket.io');
-const PageController = require('./controllers/pageController');
-const pageController = new PageController();
+import { Server } from 'socket.io';
+import { getPage } from './helpers/getPage.js';
 
-const os = require('os');
-const formatUptime = require('./helpers/formateUptime.js');
-const { pingDB } = require('./db');
+import os from 'node:os';
+import { formateUptime } from './helpers/formateUptime.js';
+import { pingDB } from './db/index.js';
 
-function initSocket(server) {
+export default function initSocket(server) {
   let statusUpdateInterval = null;
   const io = new Server(server);
 
@@ -17,7 +16,7 @@ function initSocket(server) {
     socket.on('pageRequest', async (pageName, ack) => {
       if (socket.lastRequestedPage === pageName) ack({});
       try {
-        const pageObj = pageController.getPage(pageName);
+        const pageObj = getPage(pageName);
         ack(pageObj);
         socket.lastRequestedPage = pageName;
 
@@ -37,7 +36,7 @@ function initSocket(server) {
                           .map((load) => load.toFixed(2))
                           .join(','),
                   activeRequests: io.engine.clientsCount,
-                  uptime: formatUptime(process.uptime()),
+                  uptime: formateUptime(process.uptime()),
                   memory: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(
                     2
                   )} MiB`,
@@ -69,5 +68,3 @@ function initSocket(server) {
 
   return io;
 }
-
-module.exports = initSocket;

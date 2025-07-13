@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-const { mongooseURI } = require('../config.js');
-const { env } = require('../config.js');
+import mongoose from 'mongoose';
+import { mongooseURI, env } from '../config.js';
 
 /**
  * Connects to the MongoDB database using the provided URI.
@@ -8,7 +7,7 @@ const { env } = require('../config.js');
  * @async
  * @returns {Promise<void>} Resolves when the connection is successful.
  */
-const connectDB = async () => {
+export async function connectDB() {
   try {
     await mongoose.connect(mongooseURI);
     console.log('MongoDB Connected');
@@ -26,7 +25,7 @@ const connectDB = async () => {
       );
     }
   }
-};
+}
 
 /**
  * Pings the MongoDB database to measure the response time.
@@ -34,7 +33,7 @@ const connectDB = async () => {
  * @async
  * @returns {Promise<number>} Resolves with the ping time in milliseconds.
  */
-const pingDB = async () => {
+export async function pingDB() {
   try {
     const start = process.hrtime();
 
@@ -59,6 +58,4 @@ const pingDB = async () => {
     }
     return 'N/A';
   }
-};
-
-module.exports = { connectDB, pingDB };
+}

@@ -1,22 +1,21 @@
-const morgan = require('morgan');
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
+import morgan from 'morgan';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
-const express = require('express');
-const { createServer } = require('node:http');
-const initSocket = require('./socket.js');
+import express from 'express';
+import { createServer } from 'node:http';
+import io from './socket.js';
 
-const { resolve } = require('node:path');
-const { connectDB } = require('./db');
-const { env, port } = require('./config.js');
+import { connectDB } from './db/index.js';
+import { env, port } from './config.js';
 const isProduction = env === 'production';
 
 const app = express();
 const server = createServer(app);
-initSocket(server);
+io(server);
 connectDB();
 
-app.use(express.static(resolve(__dirname, '..', 'public')));
+app.use(express.static('../public'));
 
 if (isProduction) {
   app.use(helmet());
@@ -34,7 +33,7 @@ app.use(morgan(isProduction ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(cookieParser());
 
-const routes = require('./router');
+import routes from './router/index.js';
 app.use('/', routes);
 
 if (isProduction) {

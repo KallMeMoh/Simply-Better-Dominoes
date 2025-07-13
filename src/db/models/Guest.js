@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model } from 'mongoose';
 
 const guestUserSchema = new Schema(
   {
@@ -36,4 +36,4 @@ const guestUserSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model('Guest', guestUserSchema);
+export default model('Guest', guestUserSchema);

@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const rateLimit = require('express-rate-limit');
+import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 
-const { join } = require('node:path');
-const authRoutes = require('./authRoutes.js');
-const { env } = require('../config.js');
+import authRoutes from './authRoutes.js';
+import { env } from '../config.js';
 
+const router = Router();
 router.use('/auth', authRoutes);
 
 const isProduction = env === 'production';
@@ -17,14 +16,15 @@ const limiter = rateLimit({
 });
 
 router.get('/', limiter, (req, res) => {
-  res.sendFile(join(__dirname, '..', '..', 'views', 'index.html'));
+  res.sendFile('../../views/index.html');
 });
 
-const jwt = require('jsonwebtoken');
-const config = require('../config.js');
-const User = require('../db/models/User.js');
-const Session = require('../db/models/Session.js');
-const protected = async (req, res, next) => {
+// temp code -> shall be a socket io middleware
+import jwt from 'jsonwebtoken';
+import config from '../config.js';
+import User from '../db/models/User.js';
+import Session from '../db/models/Session.js';
+const protectedMiddleware = async (req, res, next) => {
   try {
     const token = req.cookies['token'];
     console.log(token);
@@ -68,8 +68,8 @@ const protected = async (req, res, next) => {
   }
 };
 
-router.get('/protected', protected, (req, res) => {
+router.get('/protected', protectedMiddleware, (req, res) => {
   res.status(200).send({ user: res.user, session: res.session });
 });
 
-module.exports = router;
+export default router;

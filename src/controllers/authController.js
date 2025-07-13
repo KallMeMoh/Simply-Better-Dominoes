@@ -1,13 +1,13 @@
-const bcrypt = require('bcrypt');
-const { validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
-const config = require('../config.js');
+import bcrypt from 'bcrypt';
+import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import config from '../config.js';
 
-const User = require('../db/models/User.js');
-const Session = require('../db/models/Session.js');
-// const Guest = require('../db/models/Guest.js');
+import User from '../db/models/User.js';
+import Session from '../db/models/Session.js';
+// import Guest from '../db/models/Guest.js';
 
-exports.POST_Signup = async (req, res) => {
+export async function POST_Signup(req, res) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -50,9 +50,9 @@ exports.POST_Signup = async (req, res) => {
       res.json({ status: 500, message: 'Internal server error' });
     }
   }
-};
+}
 
-exports.POST_Login = async (req, res) => {
+export async function POST_Login(req, res) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -97,7 +97,7 @@ exports.POST_Login = async (req, res) => {
       },
       config.jwt.secret,
       {
-        expiresIn: config.jwt.token_expiry,
+        expiresIn: config.jwt.tokenExpiry,
       }
     );
 
@@ -119,9 +119,9 @@ exports.POST_Login = async (req, res) => {
       res.json({ status: 500, message: 'Internal server error' });
     }
   }
-};
+}
 
-exports.POST_Logout = async (req, res) => {
+export async function POST_Logout(req, res) {
   res.clearCookie('token');
   res.send({ OK: 1 });
   //   const logoutAll = req.body.logout_all ?? false;
@@ -145,6 +145,6 @@ exports.POST_Logout = async (req, res) => {
   //     console.error(err);
   //     res.status(500).json({ message: 'Internal Server Error' });
   //   }
-};
+}
 
-exports.POST_ChangePassword = async (req, res) => {};
+export async function POST_ChangePassword(req, res) {}
