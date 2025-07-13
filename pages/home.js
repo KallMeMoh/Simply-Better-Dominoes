@@ -1,7 +1,7 @@
-const header = require('./components/header.js');
-const footer = require('./components/footer.js');
+import header from './components/header.js';
+import footer from './components/footer.js';
 
-module.exports = {
+export default {
   tag: 'main',
   attrs: {},
   children: [

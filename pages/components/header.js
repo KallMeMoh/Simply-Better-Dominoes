@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   tag: 'header',
   attrs: {},
   children: [

@@ -214,6 +214,7 @@ async function login() {
 }
 
 function render(pageObj) {
+  console.log(pageObj);
   if (!pageObj.tag) return;
 
   document.querySelector('main').remove();

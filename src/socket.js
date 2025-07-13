@@ -16,7 +16,7 @@ export default function initSocket(server) {
     socket.on('pageRequest', async (pageName, ack) => {
       if (socket.lastRequestedPage === pageName) ack({});
       try {
-        const pageObj = getPage(pageName);
+        const pageObj = await getPage(pageName);
         ack(pageObj);
         socket.lastRequestedPage = pageName;
 

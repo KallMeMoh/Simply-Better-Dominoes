@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   tag: 'footer',
   attrs: {
     class: 'd-flex justify-content-center align-items-center p-3',
