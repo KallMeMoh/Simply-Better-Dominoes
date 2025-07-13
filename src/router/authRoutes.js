@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 import {
-  POST_Signup,
-  POST_Login,
-  POST_Logout,
-  POST_ChangePassword,
+  signupController,
+  loginController,
+  logoutController,
+  changePasswordController,
 } from '../controllers/authController.js';
 
 const router = Router();
@@ -36,7 +36,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  POST_Signup
+  signupController
 );
 
 router.post(
@@ -68,7 +68,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  POST_Login
+  loginController
 );
 
 router.post(
@@ -79,7 +79,7 @@ router.post(
       .isBoolean()
       .withMessage('Logout all must be a boolean value'),
   ],
-  POST_Logout
+  logoutController
 );
 
 router.post(
@@ -113,7 +113,7 @@ router.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
       ),
   ],
-  POST_ChangePassword
+  changePasswordController
 );
 
 export default router;

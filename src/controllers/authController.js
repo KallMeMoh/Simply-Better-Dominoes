@@ -7,7 +7,7 @@ import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
 // import Guest from '../db/models/Guest.js';
 
-export async function POST_Signup(req, res) {
+export async function signupController(req, res) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -52,7 +52,7 @@ export async function POST_Signup(req, res) {
   }
 }
 
-export async function POST_Login(req, res) {
+export async function loginController(req, res) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -121,7 +121,7 @@ export async function POST_Login(req, res) {
   }
 }
 
-export async function POST_Logout(req, res) {
+export async function logoutController(req, res) {
   res.clearCookie('token');
   res.send({ OK: 1 });
   //   const logoutAll = req.body.logout_all ?? false;
@@ -147,4 +147,4 @@ export async function POST_Logout(req, res) {
   //   }
 }
 
-export async function POST_ChangePassword(req, res) {}
+export async function changePasswordController(req, res) {}
