@@ -44,7 +44,7 @@ const userSchema = new Schema(
     },
     token_version: { type: Number, default: 1 },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('User', userSchema);

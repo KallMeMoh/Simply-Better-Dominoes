@@ -1,13 +1,14 @@
 import bcrypt from 'bcrypt';
 import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import config from '../config.js';
+import { jwt as jwtConfig, env } from '../config.js';
 
 import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
+import type { Request, Response } from 'express';
 // import Guest from '../db/models/Guest.js';
 
-export async function signupController(req, res) {
+export async function signupController(req: Request, res: Response) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -52,7 +53,7 @@ export async function signupController(req, res) {
   }
 }
 
-export async function loginController(req, res) {
+export async function loginController(req: Request, res: Response) {
   try {
     const payload = req.cookies['token'];
     if (payload)
@@ -95,16 +96,16 @@ export async function loginController(req, res) {
         sessionId: session._id,
         tokenVersion: user.token_version,
       },
-      config.jwt.secret,
+      jwtConfig.secret,
       {
-        expiresIn: config.jwt.tokenExpiry,
-      }
+        expiresIn: jwtConfig.tokenExpiry,
+      },
     );
 
     res.cookie('token', token, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: config.env === 'production',
+      secure: env === 'production',
     });
 
     res.json({ OK: 1 });
@@ -121,7 +122,7 @@ export async function loginController(req, res) {
   }
 }
 
-export async function logoutController(req, res) {
+export async function logoutController(req: Request, res: Response) {
   res.clearCookie('token');
   res.send({ OK: 1 });
   //   const logoutAll = req.body.logout_all ?? false;
@@ -147,4 +148,4 @@ export async function logoutController(req, res) {
   //   }
 }
 
-export async function changePasswordController(req, res) {}
+export async function changePasswordController(req: Request, res: Response) {}

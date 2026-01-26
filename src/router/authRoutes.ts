@@ -7,9 +7,9 @@ import {
   changePasswordController,
 } from '../controllers/authController.js';
 
-const router = Router();
+const authRouter = Router();
 
-router.post(
+authRouter.post(
   '/signup',
   [
     body('username')
@@ -19,7 +19,7 @@ router.post(
       .withMessage('Username must be at least 3 characters long')
       .matches(/^[a-zA-Z0-9_]+$/)
       .withMessage(
-        'Username can only contain letters, numbers, and _ (underscores)'
+        'Username can only contain letters, numbers, and _ (underscores)',
       ),
     body('email')
       .notEmpty()
@@ -33,13 +33,13 @@ router.post(
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
   ],
-  signupController
+  signupController,
 );
 
-router.post(
+authRouter.post(
   '/login',
   [
     oneOf([
@@ -50,7 +50,7 @@ router.post(
         .withMessage('Username must be at least 3 characters long')
         .matches(/^[a-zA-Z0-9_]+$/)
         .withMessage(
-          'Username can only contain letters, numbers, and _ (underscores)'
+          'Username can only contain letters, numbers, and _ (underscores)',
         ),
       body('email')
         .notEmpty()
@@ -65,13 +65,13 @@ router.post(
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
   ],
-  loginController
+  loginController,
 );
 
-router.post(
+authRouter.post(
   '/logout',
   [
     body('logout_all')
@@ -79,10 +79,10 @@ router.post(
       .isBoolean()
       .withMessage('Logout all must be a boolean value'),
   ],
-  logoutController
+  logoutController,
 );
 
-router.post(
+authRouter.post(
   '/change-password',
   [
     body('curr_password')
@@ -92,7 +92,7 @@ router.post(
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
     body('new_password')
       .notEmpty()
@@ -101,7 +101,7 @@ router.post(
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
     body('re_password')
       .notEmpty()
@@ -110,10 +110,10 @@ router.post(
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
-        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters'
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
   ],
-  changePasswordController
+  changePasswordController,
 );
 
-export default router;
+export default authRouter;

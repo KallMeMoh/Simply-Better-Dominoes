@@ -1,4 +1,4 @@
-export async function getPage(fileName) {
+export async function getPage(fileName: string) {
   try {
     const module = await import(`../../pages/${fileName}.js`);
     return module.default;

@@ -1,30 +1,38 @@
-import { Server } from 'socket.io';
+import { Server as SocketServer } from 'socket.io';
 import { getPage } from './helpers/getPage.js';
 
 import os from 'node:os';
 import { formateUptime } from './helpers/formateUptime.js';
 import { pingDB } from './db/index.js';
+import type { Server as HttpServer } from 'node:http';
 
-export default function initSocket(server) {
-  let statusUpdateInterval = null;
-  const io = new Server(server);
+export default function initSocket(server: HttpServer) {
+  let statusUpdateInterval: NodeJS.Timeout;
+  const io = new SocketServer(server);
+
+  io.use((socket, next) => {
+    // const token =
+    next();
+  });
 
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
-    socket.lastRequestedPage = '';
+    socket.data.lastRequestedPage = '';
     socket.on('pageRequest', async (pageName, ack) => {
-      if (socket.lastRequestedPage === pageName) ack({});
+      if (socket.data.lastRequestedPage === pageName) ack({});
       try {
         const pageObj = await getPage(pageName);
         ack(pageObj);
-        socket.lastRequestedPage = pageName;
+        socket.data.lastRequestedPage = pageName;
 
         if (pageName === 'status') {
           socket.join('serverStatus');
           if (!statusUpdateInterval) {
             statusUpdateInterval = setInterval(async () => {
-              if (io.sockets.adapter.rooms.get('serverStatus')?.size > 0) {
+              if (
+                (io.sockets.adapter.rooms.get('serverStatus')?.size ?? 0) > 0
+              ) {
                 const updatedStatus = {
                   sentAt: Date.now(),
                   databasePing: `${await pingDB()} ms`,
@@ -38,14 +46,14 @@ export default function initSocket(server) {
                   activeRequests: io.engine.clientsCount,
                   uptime: formateUptime(process.uptime()),
                   memory: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(
-                    2
+                    2,
                   )} MiB`,
                 };
 
                 io.to('serverStatus').emit('statusUpdate', updatedStatus);
               } else {
                 clearInterval(statusUpdateInterval);
-                statusUpdateInterval = null;
+                statusUpdateInterval;
               }
             }, 5000);
           }

@@ -2,5 +2,6 @@
 /node_modules
 .env
 testing.js
+
 /views/*
 !/views/index.html
