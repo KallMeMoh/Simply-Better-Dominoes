@@ -1,8 +1,8 @@
 import { Server as SocketServer } from 'socket.io';
-import { getPage } from './helpers/getPage.js';
+import { getPage } from './utils/getPage.js';
 
 import os from 'node:os';
-import { formateUptime } from './helpers/formateUptime.js';
+import { formateUptime } from './utils/formateUptime.js';
 import { pingDB } from './db/index.js';
 import type { Server as HttpServer } from 'node:http';
 
