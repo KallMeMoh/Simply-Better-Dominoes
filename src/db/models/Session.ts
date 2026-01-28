@@ -8,9 +8,16 @@ const sessionSchema = new Schema(
       required: true,
     },
     device: { type: String, required: true },
+    device_type: { type: String, required: true },
+    os: { type: String, required: true },
+
     ip_address: { type: String, required: true },
+    country: { type: String, required: true },
+    city: { type: String, required: true },
+
+    suspicious: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default model('Session', sessionSchema);
