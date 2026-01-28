@@ -6,19 +6,20 @@ import { jwt as jwtConfig, env } from '../config.js';
 import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
 import type { Request, Response } from 'express';
+import type JWTPayload from '../types/jsonwebtoken.js';
 // import Guest from '../db/models/Guest.js';
 
 export async function signupController(req: Request, res: Response) {
   try {
     const payload = req.cookies['token'];
     if (payload)
-      return res.json({
-        status: 409,
+      return res.status(409).json({
+        success: false,
         errors: [{ msg: 'Already authanticated session exists' }],
       });
     const errors = validationResult(req);
     if (!errors.isEmpty())
-      return res.json({ status: 400, errors: errors.array() });
+      return res.status(400).json({ success: false, errors: errors.array() });
 
     const { username, email, password } = req.body;
 
@@ -26,8 +27,9 @@ export async function signupController(req: Request, res: Response) {
       $or: [{ username }, { email }],
     });
     if (existingUser)
-      return res.json({
-        errors: [{ status: 409, msg: 'Username or Email already exists' }],
+      return res.status(409).json({
+        success: false,
+        errors: [{ msg: 'Username or Email already exists' }],
       });
 
     const salt = await bcrypt.genSalt(10);
@@ -40,16 +42,50 @@ export async function signupController(req: Request, res: Response) {
     });
     await user.save();
 
-    res.json({ OK: 1 });
-  } catch (err) {
+    const session = new Session({
+      user_id: user._id,
+      device: req.headers['user-agent'],
+      ip_address: req.ip,
+    });
+    await session.save();
+
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        sessionId: session._id.toString(),
+        tokenVersion: user.token_version,
+      },
+      jwtConfig.secret,
+      {
+        expiresIn: jwtConfig.tokenExpiry,
+      },
+    );
+
+    res.cookie('token', token, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: env === 'production',
+    });
+
+    return res
+      .status(201)
+      .json({ success: true, msg: 'Account created successfully' });
+  } catch (err: any) {
     console.error(err);
-    if (err.message === 'Invalid username or password') {
-      res.json({ status: 401, message: err.message });
-    } else if (err.name === 'ValidationError') {
-      res.json({ status: 400, message: err.message });
-    } else {
-      res.json({ status: 500, message: 'Internal server error' });
-    }
+    if (err.name === 'ValidationError')
+      return res
+        .status(400)
+        .json({ success: false, errors: [{ msg: err.message }] });
+
+    if (err.name === 'MongoServerError' && err.code === 11000)
+      return res.status(409).json({
+        success: false,
+        errors: [{ msg: 'Username or Email already exists' }],
+      });
+
+    return res
+      .status(500)
+      .json({ success: false, errors: [{ msg: 'Internal server error' }] });
   }
 }
 
