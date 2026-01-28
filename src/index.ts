@@ -49,6 +49,23 @@ const limiter = rateLimit({
 app.use('/', limiter, routes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (
+    err instanceof SyntaxError &&
+    (err as any).status === 400 &&
+    'body' in err
+  ) {
+    return res.status(400).json({
+      success: false,
+      errors: [
+        {
+          type: 'body',
+          msg: 'Invalid JSON format in request body',
+          location: 'body',
+        },
+      ],
+    });
+  }
+
   const error = isDevelopment ? err : new Error('Internal Server Error');
 
   // winston logging
