@@ -1,23 +1,24 @@
-import jwt from 'jsonwebtoken';
-import { jwt as jwtConfig } from '../config.js';
-import User from '../db/models/User.js';
-import Session from '../db/models/Session.js';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from 'express';
+import { jwt as jwtConfig } from '../config';
+import User from '../db/models/User';
+import Session from '../db/models/Session';
+import type JWTPayload from '../types/jsonwebtoken';
 
-export default async function protectedMiddleware(
+export async function protectedMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const token: string = req.cookies['token'] ?? '';
+    const token: string = req.cookies['token'];
     console.log(token);
-    if (!token) return res.sendStatus(401);
+    if (!token) return res.redirect('/login');
 
     const { userId, sessionId, tokenVersion } = jwt.verify(
       token,
       jwtConfig.secret,
-    );
+    ) as JWTPayload;
 
     const user = await User.findById(userId);
     if (!user || user.token_version !== tokenVersion) {
@@ -25,28 +26,23 @@ export default async function protectedMiddleware(
       return res.redirect('/login');
     }
 
-    // idk what this is for
     const session = await Session.findById(sessionId);
     if (!session) {
       res.clearCookie('token');
-      return res.sendStatus(400);
+      return res.redirect('/login');
     }
 
-    if (
-      req.headers['user-agent'] === session.device &&
-      req.ip === session.ip_address
-    ) {
-      req.user = user;
-      req.session = session;
-      next();
-    } else {
-      // email the person to confirm if this was them
-      // user can flag as not sus or login from trusted session
-      // to revoke sus session
+    // TODO: flag session as sus if client info are different from session
+    // if (
+    //   req.headers['user-agent'] !== session.device ||
+    //   req.ip !== session.ip_address
+    // ) {
+    // }
 
-      res.sendStatus(401);
-    }
+    req.user = user;
+    req.session = session;
+    next();
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof JsonWebTokenError) res.sendStatus(500);
   }
 }
