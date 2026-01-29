@@ -20,4 +20,9 @@ const sessionSchema = new Schema(
   { timestamps: true },
 );
 
+sessionSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 30 * 24 * 60 * 60 },
+);
+
 export default model('Session', sessionSchema);
