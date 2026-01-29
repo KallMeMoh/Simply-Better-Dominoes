@@ -205,4 +205,9 @@ export async function logoutController(req: Request, res: Response) {
   //   }
 }
 
+export async function revokeController(req: Request, res: Response) {
+  try {
+  } catch (err: any) {}
+}
+
 export async function changePasswordController(req: Request, res: Response) {}

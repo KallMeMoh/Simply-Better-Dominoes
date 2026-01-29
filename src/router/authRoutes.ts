@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { body, oneOf } from 'express-validator';
+import { body, oneOf, param } from 'express-validator';
 import {
   signupController,
   loginController,
   logoutController,
+  revokeController,
   changePasswordController,
 } from '../controllers/authController.js';
 
@@ -86,15 +87,12 @@ authRouter.post(
   loginController,
 );
 
-authRouter.post(
-  '/logout',
-  [
-    body('logout_all')
-      .optional({ checkFalsy: true })
-      .isBoolean()
-      .withMessage('Logout all must be a boolean value'),
-  ],
-  logoutController,
+authRouter.post('/logout', logoutController);
+
+authRouter.delete(
+  '/session/:sessionId',
+  param('sessionId').notEmpty().withMessage('SessionId is required'),
+  revokeController,
 );
 
 authRouter.post(
