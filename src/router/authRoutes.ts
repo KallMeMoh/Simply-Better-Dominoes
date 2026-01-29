@@ -22,15 +22,13 @@ authRouter.post(
       .matches(/^[a-zA-Z0-9_]+$/)
       .withMessage(
         'Username can only contain letters, numbers, and _ (underscores)',
-      )
-      .bail(),
+      ),
     body('email')
       .notEmpty()
       .withMessage('Email is required')
       .bail()
       .isEmail()
-      .withMessage('Invalid email format')
-      .bail(),
+      .withMessage('Invalid email format'),
     body('password')
       .notEmpty()
       .withMessage('Password is required')
@@ -41,8 +39,7 @@ authRouter.post(
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
-      )
-      .bail(),
+      ),
   ],
   signupController,
 );
@@ -50,27 +47,30 @@ authRouter.post(
 authRouter.post(
   '/login',
   [
-    oneOf([
-      body('username')
-        .notEmpty()
-        .withMessage('Username is required')
-        .bail()
-        .isLength({ min: 3, max: 20 })
-        .withMessage('Username must be at least 3 characters long')
-        .bail()
-        .matches(/^[a-zA-Z0-9_]+$/)
-        .withMessage(
-          'Username can only contain letters, numbers, and _ (underscores)',
-        )
-        .bail(),
-      body('email')
-        .notEmpty()
-        .withMessage('Email is required')
-        .bail()
-        .isEmail()
-        .withMessage('Invalid email format')
-        .bail(),
-    ]),
+    oneOf(
+      [
+        body('username')
+          .notEmpty()
+          .withMessage('Username is required')
+          .bail()
+          .isLength({ min: 3, max: 20 })
+          .withMessage('Username must be at least 3 characters long')
+          .bail()
+          .matches(/^[a-zA-Z0-9_]+$/)
+          .withMessage(
+            'Username can only contain letters, numbers, and _ (underscores)',
+          ),
+        body('email')
+          .notEmpty()
+          .withMessage('Email is required')
+          .bail()
+          .isEmail()
+          .withMessage('Invalid email format'),
+      ],
+      {
+        message: 'Invalid username or email',
+      },
+    ),
     body('password')
       .notEmpty()
       .withMessage('Password is required')
@@ -81,8 +81,7 @@ authRouter.post(
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
-      )
-      .bail(),
+      ),
   ],
   loginController,
 );
@@ -111,8 +110,7 @@ authRouter.post(
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
-      )
-      .bail(),
+      ),
     body('new_password')
       .notEmpty()
       .withMessage('New Password is required')
@@ -123,8 +121,7 @@ authRouter.post(
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
-      )
-      .bail(),
+      ),
     body('re_password')
       .notEmpty()
       .withMessage('Repeat New Password is required')
@@ -135,8 +132,7 @@ authRouter.post(
       .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?(_|[^\W\s])).+$/)
       .withMessage(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
-      )
-      .bail(),
+      ),
   ],
   changePasswordController,
 );
