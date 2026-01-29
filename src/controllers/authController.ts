@@ -7,6 +7,8 @@ import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
 import type { Request, Response } from 'express';
 import type JWTPayload from '../types/jsonwebtoken.js';
+import { UAParser } from 'ua-parser-js';
+import getGeolocationInfo from '../utils/getGeolocationInfo.js';
 // import Guest from '../db/models/Guest.js';
 
 export async function signupController(req: Request, res: Response) {
@@ -42,10 +44,20 @@ export async function signupController(req: Request, res: Response) {
     });
     await user.save();
 
+    const { os, device, browser } = new UAParser(
+      req.headers['user-agent'],
+    ).getResult();
+
+    const { city, country, ip_address } = await getGeolocationInfo(req);
+
     const session = new Session({
       user_id: user._id,
-      device: req.headers['user-agent'],
-      ip_address: req.ip,
+      os: os.name || 'Unkown',
+      device_type: device.type || 'desktop',
+      device: device.model || browser.name || 'Unkown',
+      city,
+      country,
+      ip_address,
     });
     await session.save();
 
