@@ -6,10 +6,8 @@ import { jwt as jwtConfig, env } from '../config.js';
 import User from '../db/models/User.js';
 import Session from '../db/models/Session.js';
 import type { Request, Response } from 'express';
-import type JWTPayload from '../types/jsonwebtoken.js';
 import { UAParser } from 'ua-parser-js';
 import getGeolocationInfo from '../utils/getGeolocationInfo.js';
-// import Guest from '../db/models/Guest.js';
 
 export async function signupController(req: Request, res: Response) {
   try {
@@ -105,38 +103,48 @@ export async function loginController(req: Request, res: Response) {
   try {
     const payload = req.cookies['token'];
     if (payload)
-      return res.json({
-        status: 409,
+      return res.status(409).json({
+        success: false,
         errors: [{ msg: 'Already authanticated session exists' }],
       });
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.json({ errors: errors.array() });
+    if (!errors.isEmpty())
+      return res.status(400).json({ success: false, errors: errors.array() });
 
     const { username, email, password } = req.body;
 
-    let user;
-    if (email) user = await User.findOne({ email });
-    else user = await User.findOne({ username });
+    const user = await User.findOne(username ? { username } : { email });
 
     if (!user)
-      return res.json({
-        status: 401,
-        errors: [{ msg: 'User does not exist' }],
+      return res.status(401).json({
+        success: false,
+        errors: [{ msg: 'Account does not exist' }],
       });
 
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch)
-      return res.json({
-        status: 401,
+      return res.status(401).json({
+        success: false,
         errors: [{ msg: 'Invalid credintials' }],
       });
 
+    const { os, device, browser } = new UAParser(
+      req.headers['user-agent'],
+    ).getResult();
+
+    const { city, country, ip_address } = await getGeolocationInfo(req);
+
     const session = new Session({
       user_id: user._id,
-      device: req.headers['user-agent'],
-      ip_address: req.ip,
+      os: os.name || 'Unkown',
+      device_type: device.type || 'desktop',
+      device: device.model || browser.name || 'Unkown',
+      city,
+      country,
+      ip_address,
     });
     await session.save();
+    console.log(session);
 
     const token = jwt.sign(
       {
@@ -156,17 +164,18 @@ export async function loginController(req: Request, res: Response) {
       secure: env === 'production',
     });
 
-    res.json({ OK: 1 });
-  } catch (err) {
+    res.status(200).json({ success: true, msg: 'Logged in successfully' });
+  } catch (err: any) {
     console.error(err);
-    if (err.name === 'ValidationError') {
-      res.json({
-        status: 400,
+    if (err.name === 'ValidationError')
+      return res.status(400).json({
+        success: false,
         errors: [{ msg: err.message }],
       });
-    } else {
-      res.json({ status: 500, message: 'Internal server error' });
-    }
+
+    return res
+      .status(500)
+      .json({ success: false, errors: [{ msg: 'Internal server error' }] });
   }
 }
 
