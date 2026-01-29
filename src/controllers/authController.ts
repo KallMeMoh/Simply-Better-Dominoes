@@ -8,6 +8,7 @@ import Session from '../db/models/Session.js';
 import type { Request, Response } from 'express';
 import { UAParser } from 'ua-parser-js';
 import getGeolocationInfo from '../utils/getGeolocationInfo.js';
+import type JWTPayload from '../types/jsonwebtoken.js';
 
 export async function signupController(req: Request, res: Response) {
   try {
@@ -181,28 +182,9 @@ export async function loginController(req: Request, res: Response) {
 
 export async function logoutController(req: Request, res: Response) {
   res.clearCookie('token');
-  res.send({ OK: 1 });
-  //   const logoutAll = req.body.logout_all ?? false;
-  //   /////////////
-  //   const authHeader = req.headers.authorization;
-  //   if (!authHeader || !authHeader.startsWith('Socket '))
-  //     return res
-  //       .status(401)
-  //       .json({ message: 'Missing or malformed authorization header' });
-  //   const accessToken = authHeader.split(' ')[1];
-  //   if (!accessToken)
-  //     return res.status(401).json({ message: 'Missing access token' });
-  //   try {
-  //     // Delete the token directly
-  //     const result = await Token.deleteOne({ accessToken });
-  //     if (result.deletedCount === 0) {
-  //       return res.status(401).json({ message: 'Invalid access token' });
-  //     }
-  //     res.json({ message: 'Logged out successfully' });
-  //   } catch (err) {
-  //     console.error(err);
-  //     res.status(500).json({ message: 'Internal Server Error' });
-  //   }
+  return res
+    .status(200)
+    .json({ success: true, msg: 'Logged out successfully' });
 }
 
 export async function revokeController(req: Request, res: Response) {
