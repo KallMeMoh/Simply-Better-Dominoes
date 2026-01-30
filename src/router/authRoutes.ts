@@ -14,6 +14,7 @@ authRouter.post(
   '/register',
   [
     body('username')
+      .trim()
       .notEmpty()
       .withMessage('Username is required')
       .bail()
@@ -25,12 +26,14 @@ authRouter.post(
         'Username can only contain letters, numbers, and _ (underscores)',
       ),
     body('email')
+      .trim()
       .notEmpty()
       .withMessage('Email is required')
       .bail()
       .isEmail()
       .withMessage('Invalid email format'),
     body('password')
+      .trim()
       .notEmpty()
       .withMessage('Password is required')
       .bail()
@@ -51,6 +54,7 @@ authRouter.post(
     oneOf(
       [
         body('username')
+          .trim()
           .notEmpty()
           .withMessage('Username is required')
           .bail()
@@ -62,6 +66,7 @@ authRouter.post(
             'Username can only contain letters, numbers, and _ (underscores)',
           ),
         body('email')
+          .trim()
           .notEmpty()
           .withMessage('Email is required')
           .bail()
@@ -73,6 +78,7 @@ authRouter.post(
       },
     ),
     body('password')
+      .trim()
       .notEmpty()
       .withMessage('Password is required')
       .bail()
@@ -91,7 +97,7 @@ authRouter.post('/logout', logoutController);
 
 authRouter.delete(
   '/session/:sessionId',
-  param('sessionId').notEmpty().withMessage('SessionId is required'),
+  param('sessionId').trim().notEmpty().withMessage('SessionId is required'),
   revokeController,
 );
 
@@ -99,6 +105,7 @@ authRouter.post(
   '/change-password',
   [
     body('curr_password')
+      .trim()
       .notEmpty()
       .withMessage('Old Password is required')
       .bail()
@@ -110,6 +117,7 @@ authRouter.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
     body('new_password')
+      .trim()
       .notEmpty()
       .withMessage('New Password is required')
       .bail()
@@ -121,6 +129,7 @@ authRouter.post(
         'Password must contain at least one uppercase letter, one lowercase letter, and one number, and special characters',
       ),
     body('re_password')
+      .trim()
       .notEmpty()
       .withMessage('Repeat New Password is required')
       .bail()
