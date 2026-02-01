@@ -9,10 +9,12 @@ function getRequiredEnv(key: string) {
   return value;
 }
 
-export const env = process.env['ENV'] || 'development';
-export const port = process.env['PORT'] || 4000;
+export const env = getRequiredEnv('NODE_ENV');
+export const port = process.env['PORT'] || 3000;
 export const mongoURI = getRequiredEnv('MONGO_URI');
 export const jwt = {
   secret: getRequiredEnv('JWT_SECRET'),
   tokenExpiry: '30d' as const,
 };
+
+console.info(`RUNNING IN ${env.toUpperCase()} MODE`);
