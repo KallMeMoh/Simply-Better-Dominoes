@@ -8,7 +8,6 @@ import Session from '../db/models/Session.js';
 import type { Request, Response } from 'express';
 import { UAParser } from 'ua-parser-js';
 import getGeolocationInfo from '../utils/getGeolocationInfo.js';
-import type JWTPayload from '../types/jsonwebtoken.js';
 
 export async function signupController(req: Request, res: Response) {
   try {
@@ -185,11 +184,6 @@ export async function logoutController(req: Request, res: Response) {
   return res
     .status(200)
     .json({ success: true, msg: 'Logged out successfully' });
-}
-
-export async function revokeController(req: Request, res: Response) {
-  try {
-  } catch (err: any) {}
 }
 
 export async function changePasswordController(req: Request, res: Response) {}

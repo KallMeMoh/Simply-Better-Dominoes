@@ -4,11 +4,10 @@ import {
   signupController,
   loginController,
   logoutController,
-  revokeController,
   changePasswordController,
 } from '../controllers/authController.js';
 
-const authRouter = Router();
+export const authRouter = Router();
 
 authRouter.post(
   '/register',
@@ -95,12 +94,6 @@ authRouter.post(
 
 authRouter.post('/logout', logoutController);
 
-authRouter.delete(
-  '/session/:sessionId',
-  param('sessionId').trim().notEmpty().withMessage('SessionId is required'),
-  revokeController,
-);
-
 authRouter.post(
   '/change-password',
   [
@@ -143,5 +136,3 @@ authRouter.post(
   ],
   changePasswordController,
 );
-
-export default authRouter;
