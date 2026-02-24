@@ -9,11 +9,11 @@ import express, {
   type Response,
 } from 'express';
 import { createServer } from 'node:http';
-import attachSocket from './socket';
+import attachSocket from './socket.js';
 
-import routes from './router/index';
-import { connectDB } from './db/index';
-import { env, port } from './config';
+import routes from './router/index.js';
+import { connectDB } from './db/index.js';
+import { env, port } from './config.js';
 import rateLimit from 'express-rate-limit';
 
 const isDevelopment = env === 'development';

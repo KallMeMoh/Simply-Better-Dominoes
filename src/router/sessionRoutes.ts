@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { param } from 'express-validator';
-import { revokeController } from '../controllers/sessionController';
+import { revokeController } from '../controllers/sessionController.js';
 
 export const sessionRouter = Router();
 

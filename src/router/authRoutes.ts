@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, oneOf, param } from 'express-validator';
+import { body, oneOf } from 'express-validator';
 import {
   signupController,
   loginController,

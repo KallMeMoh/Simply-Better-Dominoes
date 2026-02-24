@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from 'express';
-import { jwt as jwtConfig } from '../config';
-import User from '../db/models/User';
-import Session from '../db/models/Session';
+import { jwt as jwtConfig } from '../config.js';
+import User from '../db/models/User.js';
+import Session from '../db/models/Session.js';
 
 export async function protectedEndpoint(
   req: Request,

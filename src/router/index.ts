@@ -1,9 +1,12 @@
 import { type Response, Router } from 'express';
 import { resolve } from 'node:path';
 
-import { authRouter } from './authRoutes';
-import { sessionRouter } from './sessionRoutes';
-import { protectedEndpoint, protectedResource } from '../middlewares/express';
+import { authRouter } from './authRoutes.js';
+import { sessionRouter } from './sessionRoutes.js';
+import {
+  protectedEndpoint,
+  protectedResource,
+} from '../middlewares/express.js';
 
 const router = Router();
 

@@ -2,7 +2,7 @@ import { Server as SocketServer } from 'socket.io';
 import { getPage } from './utils/getPage.js';
 
 import os from 'node:os';
-import { formateUptime } from './utils/formateUptime.js';
+import { formatUptime } from './utils/formatUptime.js';
 import { pingDB } from './db/index.js';
 import type { Server as HttpServer } from 'node:http';
 
@@ -44,7 +44,7 @@ export default function initSocket(server: HttpServer) {
                           .map((load) => load.toFixed(2))
                           .join(','),
                   activeRequests: io.engine.clientsCount,
-                  uptime: formateUptime(process.uptime()),
+                  uptime: formatUptime(process.uptime()),
                   memory: `${(process.memoryUsage().rss / 1024 / 1024).toFixed(
                     2,
                   )} MiB`,

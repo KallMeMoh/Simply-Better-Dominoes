@@ -26,15 +26,15 @@ export default async function getGeolocationInfo(req: Request): Promise<{
 
       return {
         ip_address,
-        city: payload.city ?? 'Unkown',
-        country: payload.country ?? 'Unkown',
+        city: payload.city ?? 'Unknown',
+        country: payload.country ?? 'Unknown',
       };
     } catch (error: any) {
       console.error({ message: error.message ?? 'Geolocation failed', error });
 
-      return { ip_address, city: 'Unkown', country: 'Unkown' };
+      return { ip_address, city: 'Unknown', country: 'Unknown' };
     }
   }
 
-  return { ip_address: 'Unkown', city: 'Unkown', country: 'Unkown' };
+  return { ip_address: 'Unknown', city: 'Unknown', country: 'Unknown' };
 }
